@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LibraryOS - Smart Modern Library</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+  <!-- Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="{{ url_for('index') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight text-white">
+        <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-sm">LB</span>
+        Library<span class="text-indigo-400">OS</span>
+      </a>
+
+      <nav class="flex items-center gap-6 text-sm font-medium">
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('books') }}" class="hover:text-indigo-400 transition">Katalog Buku</a>
+          <a href="{{ url_for('loans') }}" class="hover:text-indigo-400 transition">Data Peminjaman</a>
+          {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('admin_books') }}" class="text-indigo-400 hover:text-indigo-300 transition">Kelola Inventaris</a>
+          {% endif %}
+          <div class="flex items-center gap-3 border-l border-slate-800 pl-6">
+            <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">{{ session.get('role') }}</span>
+            <span class="text-slate-300 text-xs">{{ session.get('nama_lengkap') }}</span>
+            <a href="{{ url_for('logout') }}" class="text-xs text-rose-400 hover:text-rose-300">Keluar</a>
+          </div>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white font-semibold transition text-xs">Masuk Portal</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <!-- Flash Messages -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-3 mb-6">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl text-sm border {% if category == 'danger' %}bg-rose-950/40 border-rose-900 text-rose-200{% elif category == 'success' %}bg-emerald-950/40 border-emerald-900 text-emerald-200{% elif category == 'warning' %}bg-amber-950/40 border-amber-900 text-amber-200{% else %}bg-slate-900 border-slate-800 text-slate-200{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Perpustakaan</title>
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Navigasi Bar -->
+    <nav class="border-b border-slate-850 bg-slate-900/80 backdrop-blur px-6 py-4 flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-6">
+            <a href="{{ url_for('index') }}" class="font-extrabold text-xl text-indigo-400 tracking-wide">
+                📚 PerpusModern
+            </a>
+            {% if session.get('user_id') %}
+                <div class="hidden md:flex gap-4 text-sm font-medium">
+                    <a href="{{ url_for('books') }}" class="text-slate-300 hover:text-white transition">Katalog Buku</a>
+                    <a href="{{ url_for('loans') }}" class="text-slate-300 hover:text-white transition">Peminjaman</a>
+                    {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('admin_books') }}" class="text-indigo-400 hover:text-indigo-300 transition">Kelola Buku (Admin)</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="flex gap-4 items-center text-sm">
+            {% if session.get('user_id') %}
+                <span class="text-slate-400 hidden sm:inline">Halo, <strong class="text-white">{{ session.get('nama_lengkap') }}</strong></span>
+                <a href="{{ url_for('logout') }}" class="px-3 py-1.5 rounded-md bg-red-950/60 border border-red-800 text-red-400 hover:bg-red-900/50 transition">
+                    Logout
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold text-white transition">
+                    Login
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Notifikasi Flash Messages -->
+    <main class="container mx-auto px-4 flex-grow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mt-6 max-w-xl mx-auto space-y-2">
+                    {% for category, message in messages %}
+                        <div class="p-3 rounded-lg text-sm border
+                            {% if category == 'danger' %} bg-red-950/80 border-red-800 text-red-300
+                            {% elif category == 'success' %} bg-emerald-950/80 border-emerald-800 text-emerald-300
+                            {% elif category == 'warning' %} bg-amber-950/80 border-amber-800 text-amber-300
+                            {% else %} bg-indigo-950/80 border-indigo-800 text-indigo-300 {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Wadah Konten Dinamis -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+        &copy; Sistem Informasi Peminjaman Buku
+    </footer>
+
+</body>
+</html>

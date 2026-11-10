@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Form Tambah Buku -->
+  <div class="p-6 bg-slate-900 border border-slate-800 rounded-xl h-fit">
+    <h3 class="text-lg font-bold text-white mb-1">Tambah Koleksi Baru</h3>
+    <p class="text-xs text-slate-400 mb-6">Pustakawan dapat menyediakan inventaris baru di sini.</p>
+
+    <form method="POST" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Judul Buku</label>
+        <input type="text" name="judul" required class="w-full px-3 py-2 rounded bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Penulis</label>
+        <input type="text" name="penulis" required class="w-full px-3 py-2 rounded bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Kategori</label>
+        <input type="text" name="kategori" placeholder="Sains, Fiksi, Teknologi" required class="w-full px-3 py-2 rounded bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-400 mb-1">Jumlah Stok</label>
+        <input type="number" name="stok" min="1" value="1" required class="w-full px-3 py-2 rounded bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm rounded transition mt-2">Simpan Buku</button>
+    </form>
+  </div>
+
+  <!-- Tabel Manajemen Buku -->
+  <div class="lg:col-span-2">
+    <h3 class="text-lg font-bold text-white mb-4">Inventaris Buku Tersedia</h3>
+    <div class="overflow-x-auto border border-slate-800 rounded-xl bg-slate-900">
+      <table class="w-full text-left text-sm text-slate-300">
+        <thead class="bg-slate-950 text-slate-400 text-xs uppercase font-mono border-b border-slate-800">
+          <tr>
+            <th class="px-4 py-3">Judul</th>
+            <th class="px-4 py-3">Kategori</th>
+            <th class="px-4 py-3">Stok</th>
+            <th class="px-4 py-3 text-right">Tindakan</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800">
+          {% for book in books %}
+            <tr>
+              <td class="px-4 py-3 font-medium text-white">{{ book['judul'] }}</td>
+              <td class="px-4 py-3 text-xs text-slate-400">{{ book['kategori'] }}</td>
+              <td class="px-4 py-3 font-mono text-xs">{{ book['stok'] }}</td>
+              <td class="px-4 py-3 text-right">
+                <form action="{{ url_for('delete_book', book_id=book['id']) }}" method="POST" onsubmit="return confirm('Hapus buku ini?');" class="inline">
+                  <button type="submit" class="text-xs text-rose-400 hover:text-rose-300">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="py-20 flex flex-col items-center text-center">
+  <span class="px-3 py-1 rounded-full text-xs font-mono bg-indigo-950 text-indigo-400 border border-indigo-800 mb-6">Sistem Peminjaman Terintegrasi</span>
+  <h1 class="text-5xl font-black tracking-tight text-white max-w-2xl leading-tight">
+    Kelola Koleksi & Pinjaman Buku dengan Presisi
+  </h1>
+  <p class="mt-4 text-slate-400 max-w-xl text-base">
+    Platform efisien untuk pustakawan mengatur stok dan anggota meminjam buku secara mandiri dan cepat.
+  </p>
+  <div class="mt-8 flex gap-4">
+    {% if not session.get('user_id') %}
+      <a href="{{ url_for('login') }}" class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm transition">Mulai Sekarang</a>
+    {% else %}
+      <a href="{{ url_for('books') }}" class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm transition">Lihat Katalog</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

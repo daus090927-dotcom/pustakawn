@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-6">
+  <h2 class="text-2xl font-bold text-white">Riwayat & Status Peminjaman</h2>
+  <p class="text-sm text-slate-400">Daftar buku yang sedang dipinjam dan telah dikembalikan.</p>
+</div>
+
+<div class="overflow-x-auto border border-slate-800 rounded-xl bg-slate-900">
+  <table class="w-full text-left text-sm text-slate-300">
+    <thead class="bg-slate-950 text-slate-400 text-xs uppercase font-mono border-b border-slate-800">
+      <tr>
+        <th class="px-6 py-3">Peminjam</th>
+        <th class="px-6 py-3">Judul Buku</th>
+        <th class="px-6 py-3">Tgl Pinjam</th>
+        <th class="px-6 py-3">Tgl Kembali</th>
+        <th class="px-6 py-3">Status</th>
+        <th class="px-6 py-3 text-right">Aksi</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-800">
+      {% for loan in loans %}
+        <tr>
+          <td class="px-6 py-4 font-medium text-white">{{ loan['nama_lengkap'] }}</td>
+          <td class="px-6 py-4">{{ loan['judul'] }}</td>
+          <td class="px-6 py-4 font-mono text-xs">{{ loan['tanggal_pinjam'] }}</td>
+          <td class="px-6 py-4 font-mono text-xs">{{ loan['tanggal_kembali'] or '-' }}</td>
+          <td class="px-6 py-4">
+            {% if loan['status'] == 'dipinjam' %}
+              <span class="px-2 py-1 rounded text-[11px] bg-amber-950/60 border border-amber-800 text-amber-300">Dipinjam</span>
+            {% else %}
+              <span class="px-2 py-1 rounded text-[11px] bg-emerald-950/60 border border-emerald-800 text-emerald-300">Dikembalikan</span>
+            {% endif %}
+          </td>
+          <td class="px-6 py-4 text-right">
+            {% if loan['status'] == 'dipinjam' %}
+              <form action="{{ url_for('return_book', loan_id=loan['id']) }}" method="POST" class="inline">
+                <button type="submit" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-xs transition">Kembalikan</button>
+              </form>
+            {% else %}
+              <span class="text-xs text-slate-600">Selesai</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="6" class="px-6 py-8 text-center text-slate-500">Belum ada riwayat peminjaman.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
